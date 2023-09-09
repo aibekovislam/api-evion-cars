@@ -1,6 +1,7 @@
 import express from 'express';
 import axios from 'axios';
 import morgan from 'morgan'; 
+import cors from 'cors'
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -8,6 +9,8 @@ const port = process.env.PORT || 3000;
 app.use(morgan('dev'));
 
 app.use(express.json());
+
+app.use(cors());
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
