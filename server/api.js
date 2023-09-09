@@ -105,7 +105,7 @@ app.get('/car/:id', async (req, res) => {
 
 app.post('/addLead', async (req, res) => {
   try {
-    const { name, price, status_id, pipeline_id, created_by, updated_by } = req.body;
+    const { name, price, pipeline_id } = req.body;
 
     const clientId = 'e427c3a4-e7b1-41f2-9e36-216b7aedb018';
     const clientSecret = '36xXa5rP1AOh93kDfOLo5UMHZcljxj5GV4psh4IuvW6HNBVwXmcRF3AB2LCWQexS';
@@ -117,10 +117,7 @@ app.post('/addLead', async (req, res) => {
       {
         name,
         price,
-        status_id,
-        pipeline_id,
-        created_by,
-        updated_by
+        pipeline_id
       },
       {
         headers: {
