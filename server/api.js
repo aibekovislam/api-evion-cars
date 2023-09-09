@@ -103,35 +103,54 @@ app.get('/car/:id', async (req, res) => {
   }
 })
 
-const amocrmToken = 'def5020004ec85d747c8f3281e75ee5a8d07f13c5e650300a2b20fb94258ca1d5c6a5c29b0f05d6bd3827a768395169c9be5c8a4a1d4361a2339b92cb48aea1d5eda58c9e14c64a690d957518c911a19c532368b2ae4b007d0cb282a51116f9daaaf1fde563726f062f8532d5d148e233e5027a02de7357b38d5abca74a59b10641e80c5c35df5fa7e024b54a4d8f25c3d70adcbfa3a99f50284d45120d1022fe9f13a01f4c535112c1b20af00ed8e7ee475d67c67e176b871f928441657c0959c8048015af2dcf57430157a43615ec7d48601c2ec0b7074c9a608537b9197c605651d3c25c3859bb01e9ba12e4cba0997e8882e332ec21c310e2182e0c205d020aae7a1c6b91ad90f70c0e86a11604d7e49e0726510fcc8ec38c5d5487eeeecb2b1eef2e1208a073b0309c7d1388731fe0ad9044f98e911eef0d70438d28b7800e75a82e5fa700a45ad952c7736e74e75e1aa2b4e30ebc5f6c4b46f62839c954ffe76840d95218c88a7ce963ad37da9a5c86c10768d4e49504df281014154d350da92459469350111eb7720c3b5a29ca6ad9e9632cfbfed8a111e00862970180cb03daa30f59e1bb55362829c64be1ce379d0c87078ae83690dfdc4e7407d071e9023c86831988cf9c520c2d68650b560e27ff20838ab';
-const amocrmApiUrl = 'https://evion.amocrm.ru/api/v4/leads'
+
+app.post('/get-access-token', async (req, res) => {
+  try {
+    const clientId = 'e427c3a4-e7b1-41f2-9e36-216b7aedb018';
+    const clientSecret = '36xXa5rP1AOh93kDfOLo5UMHZcljxj5GV4psh4IuvW6HNBVwXmcRF3AB2LCWQexS';
+    const authorizationCode = 'def502009f9f82a388b32c97888398b0aa38d0275ad9da4fb99a78bd4d54ed3da3720faa2d45194375af4593e54111fd83aa833a86ce03e918f135e6a88ccbf91898d32fbd8f78e414f958664dbf124c8c8c98f3acdff9aa61f838113d4ef0ee048e9cb4afafd5f8d15156113566afa36a3a044ec77670fe520f132d2eca30fe7efe16b92ded0db401cf73ba850e8240665865bab29ff8b1f993594f7dfcfee05f37d7b210e17cb25d2500473af573a284dfcdc91c541714757457453b685d132221bbd10595c38e255ae9f9f16494068e35c40da11be57004e6e3f9425f9f861184fa3b2955f8156b4cf9310440d07a187fac0908a561ab60f7491574c65c9c8a4b8db37b67708a214fe4fafadd21e4124e3b3bdfbd710c21bcec8a87f07bca988cc0ed2200107c744aa455b77ef015a134616c4e44d6269734e275c7abd53e5f4fc57463c0bf1c9a3f11e57af67be526700dda75ffe0daea4244ce086c3c0505d68818d7dfb4a27920760ddaa6c4a9ea2c80652735b9f10329ff6e9d7b01a4e13213e20041bbbe584be6ebd90d6c7a9d5b07753eef2027c6d9481345db5e22e201b67dd61e4c36fa4f522e83ab213a9f2616fdf9d127b0012c23e1a328c11c7fd1b654e0ad6f812f5deed4374773d6c196d6f5d7cbcd0751e049dcf7418d9e44f0419dad591c';
+    const redirectUri = 'http://localhost:3000/';
+
+    const requestBody = {
+      client_id: clientId,
+      client_secret: clientSecret,
+      grant_type: 'authorization_code',
+      code: authorizationCode,
+      redirect_uri: redirectUri,
+    };
+
+    const response = await axios.post('https://evion.amocrm.ru/oauth2/access_token', requestBody);
+
+    res.json(response.data);
+  } catch (error) {
+    console.error('Ошибка при запросе к AmoCRM:', error);
+    res.status(500).json({ error: 'Ошибка при запросе к AmoCRM' });
+  }
+});
+
 
 app.post('/create-leads', async (req, res) => {
   try {
     const leadsData = req.body;
 
+    const token = req.header('Authorization').replace('Bearer ', '');
+
     const requestOptions = {
       headers: {
-        'Authorization': `Bearer ${amocrmToken}`,
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
     };
 
-    // Отправляем запрос на создание сделок
-    const response = await axios.post('https://evion.amocrm.ru/api/v4/leads', leadsData, {
-      headers: {
-        'Authorization': `Bearer ${amocrmToken}`,
-        'Content-Type': 'application/json',
-      },
-    });
+    const response = await axios.post('https://evion.amocrm.ru/api/v4/leads', leadsData, requestOptions);
 
-    // Возвращаем ответ клиенту
     res.status(response.status).json(response.data);
   } catch (error) {
     console.error('Error creating leads:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 
 app.listen(port, () => {
