@@ -119,7 +119,7 @@ app.post('/create-leads', async (req, res) => {
     };
 
     // Отправляем запрос на создание сделок
-    const response = await axios.post(`${amocrmApiUrl}/leads`, leadsData, requestOptions);
+    const response = await axios.post(amocrmApiUrl, leadsData, requestOptions);
 
     // Возвращаем ответ клиенту
     res.status(response.status).json(response.data);
