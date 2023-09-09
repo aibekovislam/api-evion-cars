@@ -103,46 +103,32 @@ app.get('/car/:id', async (req, res) => {
   }
 })
 
-app.post('/addLead', async (req, res) => {
+const amocrmToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjYxNjI5YWVlMDA0NWNlYjdiZTU0NDI5NjExN2VmMDhmOGZmMGMzNWQ4OWZiNmE3OGUwNGZlMmU3NDdjYmUwZjQzNTk4ZGEwYTQ0NmY0ZWVmIn0.eyJhdWQiOiI3YjQ5MGYxOC0yYmU1LTRhNTUtYTc0ZS0xOTYzYzk2NDFiOTgiLCJqdGkiOiI2MTYyOWFlZTAwNDVjZWI3YmU1NDQyOTYxMTdlZjA4ZjhmZjBjMzVkODlmYjZhNzhlMDRmZTJlNzQ3Y2JlMGY0MzU5OGRhMGE0NDZmNGVlZiIsImlhdCI6MTY5NDI2MzA0MiwibmJmIjoxNjk0MjYzMDQyLCJleHAiOjE2OTQyNjU0NDIsInN1YiI6Ijk4OTM5NzQiLCJncmFudF90eXBlIjoiIiwiYWNjb3VudF9pZCI6MCwiYmFzZV9kb21haW4iOm51bGwsInZlcnNpb24iOiJ2MSIsInNjb3BlcyI6WyJjaGF0cyIsImNybSIsIm1haWwiLCJub3RpZmljYXRpb25zIiwidW5zb3J0ZWQiXX0.q_sElD22xhx-zPOzHCwwnrbwf7Owvc6nv3KLMPGtsXYjXrLPHsCASIk9AqTYOFoQQO5Xu07AC4jhQApvWNe43cctNyxuLOmMP5wzjsJC5SZXekqaQyQGP5AgnRfLiyxGnCZKqd4joSwXntZcIOe0ktGVNii6S6FSh6NCpmLSoomClhUGSyb7GOkiKaZTSAFLxo3pmgfPE2M7iIwCqXNoaNSBmnW-bwOJIaeILqsOMM6f0WzXNEvypGX1OwbK7LAmTOE2fKYldT7yvWV1ONb7EKzHKyfaPhYL076pJ4U_6_0CielpMgr50YwuO_KW9ZE0B9y1etY7oHIk_RBlmeZWkg';
+
+const amocrmApiUrl = 'https://evion.amocrm.ru/api/v4/leads'
+
+app.post('/create-leads', async (req, res) => {
   try {
-    const { name, price, pipeline_id } = req.body;
+    const leadsData = req.body;
 
-    const clientId = 'e427c3a4-e7b1-41f2-9e36-216b7aedb018';
-    const clientSecret = '36xXa5rP1AOh93kDfOLo5UMHZcljxj5GV4psh4IuvW6HNBVwXmcRF3AB2LCWQexS';
-    const authorizationUrl = `https://www.amocrm.ru/oauth?client_id=${clientId}&mode=popup`;
-
-
-    const response = await axios.post(
-      'https://evion.amocrm.ru/api/v4/leads',
-      {
-        name,
-        price,
-        pipeline_id
+    const requestOptions = {
+      headers: {
+        'Authorization': `Bearer ${amocrmToken}`,
+        'Content-Type': 'application/json',
       },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImI2NGEzNzVhNWU2MDRhODlkZDZlMmUwYWVjMDlmMTM4YmM5MmI1MmZjZDBhMmRjNWNmNWI1MWUyMmIxOTcwMzU0ODFjYjM0M2ZiZDk2Y2RhIn0.eyJhdWQiOiI3YjQ5MGYxOC0yYmU1LTRhNTUtYTc0ZS0xOTYzYzk2NDFiOTgiLCJqdGkiOiJiNjRhMzc1YTVlNjA0YTg5ZGQ2ZTJlMGFlYzA5ZjEzOGJjOTJiNTJmY2QwYTJkYzVjZjViNTFlMjJiMTk3MDM1NDgxY2IzNDNmYmQ5NmNkYSIsImlhdCI6MTY5NDI2MDYyMSwibmJmIjoxNjk0MjYwNjIxLCJleHAiOjE2OTQyNjMwMjEsInN1YiI6Ijk4OTM5NzQiLCJncmFudF90eXBlIjoiIiwiYWNjb3VudF9pZCI6MCwiYmFzZV9kb21haW4iOm51bGwsInZlcnNpb24iOiJ2MSIsInNjb3BlcyI6WyJjaGF0cyIsImNybSIsIm1haWwiLCJub3RpZmljYXRpb25zIiwidW5zb3J0ZWQiXX0.G1_bcboWOHTps9uenAY7hRMZX9vOPma6Z0cV3Z-zXn8GUQO_H-7TbME5WY-M4K08s1uq50vyu1R7yqQnvbSZCeXNf3r28Bnogzf0UstPrgCJzeEY9735ePPvwjJykiVaElQVKJLf7RqA6qYLwAigbF0GYMqHzqPM7dlzDReoMqlSL6hIsnvhpeRy3sVtwmn5l39NaK0GcM3pD_7FiQtCAiaLnDs4vOB0PEYZ5-SnG5hQRNMy84f6420lf3IWsmvtVJX-keItBZV9mC7yAAO-rthYnP3tsOoKGdziUPjSBlRc1bqF9K_QtzKaE6DOJ-Z9vdQXEfR0NvdY0xL9i3Mk0A`,
-        },
-      }
-    );
+    };
 
-    if (response.status === 200) {
-      const data = response.data;
-      res.json(data);
-    } else {
-      res.status(response.status).json({
-        message: 'Error adding lead to AmoCRM',
-      });
-    }
+    // Отправляем запрос на создание сделок
+    const response = await axios.post(`${amocrmApiUrl}/leads`, leadsData, requestOptions);
+
+    // Возвращаем ответ клиенту
+    res.status(response.status).json(response.data);
   } catch (error) {
-    console.error('Ошибка при обработке запроса:', error.message);
-    console.error('Стек ошибки:', error.stack);
-    res.status(500).json({
-      message: 'Internal server error',
-    });  
+    console.error('Error creating leads:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
