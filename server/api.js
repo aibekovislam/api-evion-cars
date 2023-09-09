@@ -114,10 +114,6 @@ app.post('/addLead', async (req, res) => {
       {
         name,
         price,
-        status_id,
-        pipeline_id,
-        created_by,
-        updated_by,
       },
       {
         headers: {
