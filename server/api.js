@@ -119,7 +119,12 @@ app.post('/create-leads', async (req, res) => {
     };
 
     // Отправляем запрос на создание сделок
-    const response = await axios.post(amocrmApiUrl, leadsData, requestOptions);
+    const response = await axios.post('https://evion.amocrm.ru/api/v4/leads', leadsData, {
+      headers: {
+        'Authorization': `Bearer ${amocrmToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
 
     // Возвращаем ответ клиенту
     res.status(response.status).json(response.data);
