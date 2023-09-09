@@ -113,7 +113,7 @@ app.post('/create-leads', async (req, res) => {
 
     const requestOptions = {
       headers: {
-        'Authorization': `Bearer ${amocrmToken}`,
+        // 'Authorization': `Bearer ${amocrmToken}`,
         'Content-Type': 'application/json',
       },
     };
