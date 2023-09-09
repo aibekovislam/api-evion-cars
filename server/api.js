@@ -136,10 +136,11 @@ app.post('/addLead', async (req, res) => {
       });
     }
   } catch (error) {
-    console.error(error);
+    console.error('Ошибка при обработке запроса:', error.message);
+    console.error('Стек ошибки:', error.stack);
     res.status(500).json({
       message: 'Internal server error',
-    });
+    });  
   }
 });
 
