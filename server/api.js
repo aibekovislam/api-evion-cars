@@ -151,6 +151,23 @@ app.post('/create-leads', async (req, res) => {
 });
 
 
+app.get('/tilda-amo', async (req, res) => {
+  try {
+    const requestOptions = {
+      headers: {
+        'Authorization': `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjRkZDBkNmExN2Q5NmM5YWQ0YmVlNjljM2UxZmQ1YjhmNTBlN2VmMGRkNjY5Y2YyNTk0YWNiMWJmMjFjNWMzNjhhNmQzZmI0ZDJiY2U5MDBhIn0.eyJhdWQiOiJlNDI3YzNhNC1lN2IxLTQxZjItOWUzNi0yMTZiN2FlZGIwMTgiLCJqdGkiOiI0ZGQwZDZhMTdkOTZjOWFkNGJlZTY5YzNlMWZkNWI4ZjUwZTdlZjBkZDY2OWNmMjU5NGFjYjFiZjIxYzVjMzY4YTZkM2ZiNGQyYmNlOTAwYSIsImlhdCI6MTY5NDMzNDA0OCwibmJmIjoxNjk0MzM0MDQ4LCJleHAiOjE2OTQ0MjA0NDgsInN1YiI6Ijk4OTM5NzQiLCJncmFudF90eXBlIjoiIiwiYWNjb3VudF9pZCI6MzEyMDIxMDIsImJhc2VfZG9tYWluIjoiYW1vY3JtLnJ1IiwidmVyc2lvbiI6InYyIiwic2NvcGVzIjpbInB1c2hfbm90aWZpY2F0aW9ucyIsImZpbGVzIiwiY3JtIiwiZmlsZXNfZGVsZXRlIiwibm90aWZpY2F0aW9ucyJdfQ.o7MVerwOBpM9cYgQQIkE1jzIHw2e5xugst2Ts7e3SQnDGx95pqYqkOfuZK0CgqBLRu4hKr14B_MNLWixNlqQhOfPLu4g2CNRyOLJaApnOoCzMSVyiNoZyFe0F2Ga7RihZK1-TsK7OXRORYcPI9SlcAArBOdJX9SMdicNZyiivwYfEl0WTg_0QrI2NOXCnK75RFYHFgiHfP4NQmO1vZ7zVqhVJRDC-XXC1Twc9R7g3mpFmstGUHnK8gvOo0ERkl-ANb9XvL2aBWPlUA9YMczJn6lnCa7vaHmTJB66TS0UkOwm8-it7p7PRFJUQ2XVyQrb2F9us2aUSugR5G3iFekzfA`,
+        'Content-Type': 'application/json',
+      },
+    };
+    const response = await axios.get('https://evion.amocrm.ru/api/v4/leads/custom_fields/2627609', requestOptions);
+    console.log(response.data)
+    res.status(response.status).json(response.data.enums);
+  } catch (error) {
+    console.error('Error creating leads:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+})
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
