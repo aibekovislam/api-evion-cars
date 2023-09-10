@@ -168,6 +168,39 @@ app.get('/tilda-amo', async (req, res) => {
   }
 })
 
+app.get('/tilda-amo/leads', async (req, res) => {
+  const authToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjRkZDBkNmExN2Q5NmM5YWQ0YmVlNjljM2UxZmQ1YjhmNTBlN2VmMGRkNjY5Y2YyNTk0YWNiMWJmMjFjNWMzNjhhNmQzZmI0ZDJiY2U5MDBhIn0.eyJhdWQiOiJlNDI3YzNhNC1lN2IxLTQxZjItOWUzNi0yMTZiN2FlZGIwMTgiLCJqdGkiOiI0ZGQwZDZhMTdkOTZjOWFkNGJlZTY5YzNlMWZkNWI4ZjUwZTdlZjBkZDY2OWNmMjU5NGFjYjFiZjIxYzVjMzY4YTZkM2ZiNGQyYmNlOTAwYSIsImlhdCI6MTY5NDMzNDA0OCwibmJmIjoxNjk0MzM0MDQ4LCJleHAiOjE2OTQ0MjA0NDgsInN1YiI6Ijk4OTM5NzQiLCJncmFudF90eXBlIjoiIiwiYWNjb3VudF9pZCI6MzEyMDIxMDIsImJhc2VfZG9tYWluIjoiYW1vY3JtLnJ1IiwidmVyc2lvbiI6InYyIiwic2NvcGVzIjpbInB1c2hfbm90aWZpY2F0aW9ucyIsImZpbGVzIiwiY3JtIiwiZmlsZXNfZGVsZXRlIiwibm90aWZpY2F0aW9ucyJdfQ.o7MVerwOBpM9cYgQQIkE1jzIHw2e5xugst2Ts7e3SQnDGx95pqYqkOfuZK0CgqBLRu4hKr14B_MNLWixNlqQhOfPLu4g2CNRyOLJaApnOoCzMSVyiNoZyFe0F2Ga7RihZK1-TsK7OXRORYcPI9SlcAArBOdJX9SMdicNZyiivwYfEl0WTg_0QrI2NOXCnK75RFYHFgiHfP4NQmO1vZ7zVqhVJRDC-XXC1Twc9R7g3mpFmstGUHnK8gvOo0ERkl-ANb9XvL2aBWPlUA9YMczJn6lnCa7vaHmTJB66TS0UkOwm8-it7p7PRFJUQ2XVyQrb2F9us2aUSugR5G3iFekzfA'
+  const apiUrl = 'https://evion.amocrm.ru/api/v4/leads';
+  try {
+    const requestOptions = {
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+      },
+    };
+    let allLeads = [];
+    let nextPage = `${apiUrl}?filter%5Bstatuses%5D%5B142%5D%5B7067962%5D=&page=1&limit=250`;
+
+    while (nextPage) {
+      const response = await axios.get(nextPage, requestOptions);
+      const leads = response.data._embedded.leads;
+
+      if (leads.length === 0) {
+        break;
+      }
+
+      allLeads = allLeads.concat(leads);
+
+      nextPage = response.data._links.next?.href;
+    }
+
+    res.status(200).json({ totalLeads: allLeads.length});
+  } catch (error) {
+    console.error('Error fetching leads:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
