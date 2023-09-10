@@ -107,14 +107,14 @@ app.get('/car/:id', async (req, res) => {
 app.post('/get-access-token', async (req, res) => {
   try {
     const clientId = 'e427c3a4-e7b1-41f2-9e36-216b7aedb018';
-    const clientSecret = '36xXa5rP1AOh93kDfOLo5UMHZcljxj5GV4psh4IuvW6HNBVwXmcRF3AB2LCWQexS';
-    const authorizationCode = 'def502009f9f82a388b32c97888398b0aa38d0275ad9da4fb99a78bd4d54ed3da3720faa2d45194375af4593e54111fd83aa833a86ce03e918f135e6a88ccbf91898d32fbd8f78e414f958664dbf124c8c8c98f3acdff9aa61f838113d4ef0ee048e9cb4afafd5f8d15156113566afa36a3a044ec77670fe520f132d2eca30fe7efe16b92ded0db401cf73ba850e8240665865bab29ff8b1f993594f7dfcfee05f37d7b210e17cb25d2500473af573a284dfcdc91c541714757457453b685d132221bbd10595c38e255ae9f9f16494068e35c40da11be57004e6e3f9425f9f861184fa3b2955f8156b4cf9310440d07a187fac0908a561ab60f7491574c65c9c8a4b8db37b67708a214fe4fafadd21e4124e3b3bdfbd710c21bcec8a87f07bca988cc0ed2200107c744aa455b77ef015a134616c4e44d6269734e275c7abd53e5f4fc57463c0bf1c9a3f11e57af67be526700dda75ffe0daea4244ce086c3c0505d68818d7dfb4a27920760ddaa6c4a9ea2c80652735b9f10329ff6e9d7b01a4e13213e20041bbbe584be6ebd90d6c7a9d5b07753eef2027c6d9481345db5e22e201b67dd61e4c36fa4f522e83ab213a9f2616fdf9d127b0012c23e1a328c11c7fd1b654e0ad6f812f5deed4374773d6c196d6f5d7cbcd0751e049dcf7418d9e44f0419dad591c';
+    const clientSecret = '20GnGOC9UacXkMCVrWlVyeCYiyhZ4xY305ToeLPsdLDNzHwvEUR02KGoiM94WqM6';
+    const authorizationCode = 'def502006645d60134be19d744ad2eb4cd96a3fe73782d7d1c3676446484ad014387eb590a95dd960e0210f7821100c417115c29b9d5c81fb3b027f09a879038fdd1db162d90cd746b84bca82d69001e08f951670a9c8a82f6d07fa2b12fad69968728830bf68a949fd90d41d554c755ca2a655d4b4784de8150778cb9b888319a456680d7280e4f69eee35d3978babab67c55152fe35810deaf7655a97a8b7e78f8e650f8ddd457ae04b794a7b99a884e9642f8fb947b72484759806c0cce2e19e077b86da7fa390e12f5b0f719af0125900481508cb74bce55e1b787e6ba93e15bbb12e9d741a7b9635d6cb66fc0295c2cff65a7a75174648d348657bbd4e1dfdfdc7677735c218c81cfb6c57f08d9b2581834fec667714f8f4ea9db18740a7f18ba64ffdd728ca753111cee4de048df49c12d9ae58524909d90f693b411e0a9bf5d3100b76fb2de9ba94bd8460aec9ebb349a05729515e53c2b0a79925d323e49c43347812e4565906088b4c8093af1f3b9b52a581329156f403fa54da6c697c899e65f9561453c436a2fa0b4fa5bb66062152d8bd1e6a4288ca71979240776188fcc7c3b9531a21c07b05da15c54735ff41a7a49f058592b63292a94e548a458605aba6b22d9afa1ef280cf09a816a55876cf80301b6fd5422275a768015af9279ec8ea2e3';
     const redirectUri = 'http://localhost:3000/';
 
     const requestBody = {
       client_id: clientId,
       client_secret: clientSecret,
-      grant_type: 'authorization_code',
+      grant_type: "authorization_code",
       code: authorizationCode,
       redirect_uri: redirectUri,
     };
@@ -132,10 +132,7 @@ app.post('/get-access-token', async (req, res) => {
 app.post('/create-leads', async (req, res) => {
   try {
     const token = req.header('Authorization').replace('Bearer ', '');
-    const leadData = req.body;
-
-    console.log(token);
-    console.log(leadData)
+    const leadData = req.body
 
     const requestOptions = {
       headers: {
