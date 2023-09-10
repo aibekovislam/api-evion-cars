@@ -132,6 +132,10 @@ app.post('/get-access-token', async (req, res) => {
 app.post('/create-leads', async (req, res) => {
   try {
     const token = req.header('Authorization').replace('Bearer ', '');
+    const leadData = req.body;
+
+    console.log(token);
+    console.log(leadData)
 
     const requestOptions = {
       headers: {
@@ -140,7 +144,7 @@ app.post('/create-leads', async (req, res) => {
       },
     };
 
-    const response = await axios.post('https://evion.amocrm.ru/api/v4/leads', req.body, requestOptions);
+    const response = await axios.post('https://evion.amocrm.ru/api/v4/leads', leadData, requestOptions);
 
     res.status(response.status).json(response.data);
   } catch (error) {
