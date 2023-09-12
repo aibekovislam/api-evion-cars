@@ -1,10 +1,41 @@
 import express from 'express';
 import axios from 'axios';
 import morgan from 'morgan'; 
-import cors from 'cors'
+import cors from 'cors';
+import { google } from 'googleapis';
+import fs from 'fs/promises';
+import path from 'path';
+import process from 'process';
+
 
 const app = express();
 const port = process.env.PORT || 3000;
+const sheets = google.sheets('v4');
+
+function getJSON() {
+  fs.readFile('server/ultimate-flare-394210-984749cf001c.json', 'utf8', (err, data) => {
+    if (err) {
+        console.error('Ошибка чтения файла:', err);
+        return;
+    }
+  
+    try {
+        const jsonData = JSON.parse(data);
+        return jsonData
+    } catch (parseError) {
+        console.error('Ошибка разбора JSON:', parseError);
+    }
+  });
+}
+
+const credentials = getJSON();
+
+const auth = new google.auth.JWT({
+  email: "islam-evion-api@ultimate-flare-394210.iam.gserviceaccount.com",
+  key: "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCT3x0cfI8qvU1c\n7pAAbANV9WOlvf+2d4nG09f6KCrK0hEt+ZywIXHWbpn+h2/FuX+ER5itXt7xMZm4\nQJuVesnSyPy4iYR575QxKyrfawrTfrMXCP0IBXiuwNSS3gHOUJTT0vVjJYm4vBg2\nnOQZvyIp4SK7Vhm7Rp96HNMC9A24eluoMvJ2qt5U08mTS7hNJZJqV/4PoJzBUjan\n82feoEg15LpCt4zroLbi2X8ZTLAh4YEQ6D8iTu+00x6Zz6eh9xMvpCWT1/my+rj4\nE3k4GXgVT2BXH3sGW0SxTopBuOB9lJOzFOO6MRcEwyyPxjc5waGoz8eA5ccY9zPK\nEzaKSihVAgMBAAECggEAPAsvY3dSnQy0IsW+FGXHrvpPBaiScpG0kNdJjksMIUJO\ndogybzSNaICNqFRvdu69UEXQQanRxkeZPz+AzaBH3n79W6N/dxHo71QzevgYs8tx\nRivAryalm/Qx/RcHzbJb1G2HdcRy2WALRvXLC4dYhH/mHgK2vRxOuoOEzWCzR5JN\ninNK8Fu+5CdQRZMKjd12IcjJ3oySFeDVMaHlf1/ScAVGGukRRDwWKfRKv0B5TBc+\nKGfCojCCqodpRs7kb2CK55SgFPda5TmzXZwE5Z4INxpXvm3DLLe/Tl0hxzkoFi3X\nqro9iP5UBxNzoAB2jRKJN5Br8n2n/YEHGYulHl08+wKBgQDK7MKLd/9T7CNx16Nv\npsbkrgkd8WWYaq/I3oLgHTJBbfgN6/QxGrq8k6RmzYQDBsdNViOqo9zCa13Y2Oda\ndvww89mWfaP74gC2UF3lixB79AEBxl4qf5q400NGbS304ExaZa+oHJQnp6a935/s\nVrXpnE2N88ywkzyOABu4d9BQTwKBgQC6jCY0gNhFUxhR89qTTRyHBdHAs3gt0eZe\nY/t/he15BgsA59vCAVwp/q83tZsBV4eFLgoFXCKfKEc/eDo6G7ffo8qteGYaVW/Z\nNagm+D+8+CbRktU9vmO7uuhs1Odulgs4gNHLtb21tmro20FpF9HY/v3MEWKUUzl0\nxlthDvdQGwKBgHVC8XzEn9/wEd9kO8Z2OnLE+vG5n/q+k8vggQJe/L6AfJoW4mpJ\nxuTX8GWTlxhkn2DaSQv/Wr9iab24QaCuJzdmgjMLcWpJhB3WPRw7CxCFxNswtROb\n3120fyjASJE72ANYxXPA6AAuShVolzJsPPy83LgNzRewTYrFFz+2xMLTAoGBALHs\nOAg9l4jPT1Pi3Gc/1eSmVT+RLR+uoiUHAXnImA2lCNutSLmKKIhZRG9DA/tMq5IH\nrkEcdl0Mwp+zoP2JMF/aTdYUDnYxZMNr3NyGS+yFViju/fms3FzSURp0GeQssbkL\njI3Z4n4s5V0AuittL5Xi5tg7AKXtltBc3Az/hDxfAoGAbu0FKwhDYDoDmlE16Trl\nHPT/t9aoSHkKeNePKrc9UuxbOUBcNUrGnfmHqmwuTq+A5h+2rkSfH9r+NljghM/z\nNFxNSVP1hKeAApJwiI4DXG8kM4wva+fNQ9j/8jOcJDJt9rdHqtu6etcTnAaOkrBR\ncdcBI4VRM3L0RqMPDnA283k=\n-----END PRIVATE KEY-----\n",
+  scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+});
+
 
 app.use(morgan('dev'));
 
@@ -25,6 +56,43 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get('/google-sheets', async (req, res) => {
+  try {
+    auth.authorize(async (err) => {
+      if (err) {
+        console.error('Authentication error:', err);
+        return res.status(500).json({ error: 'Authentication error' });
+      }
+    
+      const spreadsheetId = '1-fucmPS2DEKP91kQaFTMWJaKuTyyfLwxWGbE5PaA13I';
+    
+      const sheetName = 'sum';
+    
+      try {
+        const response = await sheets.spreadsheets.values.get({
+          auth,
+          spreadsheetId,
+          range: `${sheetName}!A1:A3`, 
+        });
+    
+        const data = response.data.values;
+        if (data.length === 0) {
+          console.log('No data found.');
+          res.json({ message: 'No data found' }); 
+        } else {
+          console.log('Fetched data:', data);
+          res.json({ data }); 
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        res.status(500).json({ error: 'Error fetching data' });
+      }
+    });
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 
 app.get('/getProducts', async (req, res) => {
   try {
