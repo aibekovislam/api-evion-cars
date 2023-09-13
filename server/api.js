@@ -4,9 +4,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import { google } from 'googleapis';
 import fs from 'fs/promises';
-import path from 'path';
 import process from 'process';
-
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -176,7 +174,7 @@ app.post('/get-access-token', async (req, res) => {
   try {
     const clientId = 'e427c3a4-e7b1-41f2-9e36-216b7aedb018';
     const clientSecret = '20GnGOC9UacXkMCVrWlVyeCYiyhZ4xY305ToeLPsdLDNzHwvEUR02KGoiM94WqM6';
-    const refresh_token = "def5020041970aa527cac66765da383b98e9ef4c9db04828c39bff31f5ddabc5a5d6b78cb974fb4a7e820855a38245b536fead0a76eb94c58e4367ec0d2716119a558afaddcfb848cdbe950d0ff0e266d17d7e57431944593579290e5a8f4d9f50bcd31496d66f9656ff44f11293a376cc6d8df6bae6868a587425c5dcf31d75479266d85686a7907ac0c847243e35f5715d3bb20c37dfa2cbdabb72465f7a0f8dd21b09c85eb6f174a70bc938680a157af7a805d272db3d21c2857bfb84ed671e9537d87ac2ab91d581972858ab0b1710d2f601fa977f6e90b2e730a188781f5922f2643e907c0e9d89227d96abbab4a6d90acf132a2caa62c3631d85fae7acdd7983c281c22c6454d2c26639b776058f3ca2a5d2cda79f2f7e1be8ba565804e0b6677df62d36d54083cbd008ea40af7264130ca5c263c39e878f3ae4268962aa0afab735d2aff7a3fecb87ab6db283bc083f7d22239a7e3be46337d46e5576f55556e6b1d3d5db81528db78080cf0c9fe5e0b7398dc686f63e396a529d3f0ebc6cae237f7857fd9912aafcdc7db6e9c8dd46ec8372854587ef3a368da45135c4eae1b45d06f6e47b85f0b2fdbfa8abba39e5a3bf79d134abed2e87410d06ba43b4ab54c004ff141523462fc03e06bf8f1262df9a47f65f13c28ff35bb235fe5c5992cdba21cb51e4a3daa8bf271050";
+    const refresh_token = "def5020050c765cdef91ea3f56de28033c76b4084bc3b6511182a032c3ddbbf696f7c62883ffdcb8ecb81891ca8c528c8116cfd1815e1cf6ffe1083600a7f3c49cb1032dc13b1072fe09583c6a29e54e4dc5aaee6fcc5621ade8b0c35173bfce9e2cec69f364d551bc8444d7ddd110d867161a3788787856a233253f70f91af6468cdc5aa72994abb2e28da3c4013ab6463c128aa8cef269adda9121c9668e5753c42c2436c48cd9159e7b9297de2b01a2de1c57b74b4f2d27d53cfe37d7f98a5fce0995c813b38ea5c3a31216399042f40e454357dd4ffe57231633c863c975377ebf23df362d0de1179f0f42f14ec370d76273429832230ad0671aaa4d9a430be5a55800b24e15b60f643bf1e768d3b7e62cad0d44c294d0a1545638fa438763ecbae88d04ffc780236cce4984c2aab4f4f4cecca5de28da8db9b748bfed3aebe3adfd39a59947c7f013215f8ea1d4c24a590196fb691c023d305584df078fa8dfdd08aa71b7fe7014543b043285cf4bef188d241fbb826e070913697fa091daef5afe9ba973b19be8a1df7a940265ee6f4823d6c9f60ad0f022a7f15aab00f5f0dcbf89ba3e2d8d44ad40f9c49e91ad9e83b4e112af4f521b38128cad2a6b60393bb17765a565ac6f3c71e504c67a31674dd4d84b8879be55736698fc6a6e3793906d17356e7381e859fb907d46ff";
     const redirectUri = 'http://localhost:3000/';
 
     const requestBody = {
@@ -189,13 +187,9 @@ app.post('/get-access-token', async (req, res) => {
 
     const response = await axios.post('https://evion.amocrm.ru/oauth2/access_token', requestBody);
 
-    // Обработка ответа от сервера
     if (response.status === 200) {
       const newAccessToken = response.data.access_token;
       const newRefreshToken = response.data.refresh_token;
-
-      // Обновите сохраненный Access Token и Refresh Token в вашем хранилище
-      // Эти токены будут использоваться для следующих запросов к AmoCRM API
     } else {
       console.error('Ошибка при обновлении Access Token:', response.data);
     }
