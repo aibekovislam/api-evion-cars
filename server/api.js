@@ -299,7 +299,7 @@ app.post('/google-sheets/update-value4', async (req, res) => {
       const spreadsheetId = '1A_L5vz3P0nhA4iDOrK9Pi89jdl15vLihaZw70GoTaVY';
       const sheetName = 'Калькулятор TOUCH';
       const newValue = req.body.newValue; // Значение, которое вы хотите установить
-
+      console.log(newValue);
       try {
         const updateResponse = await sheets.spreadsheets.values.update({
           auth,
@@ -335,7 +335,7 @@ app.post('/google-sheets/update-value5', async (req, res) => {
       const spreadsheetId = '1A_L5vz3P0nhA4iDOrK9Pi89jdl15vLihaZw70GoTaVY';
       const sheetName = 'Калькулятор TOUCH';
       const newValue = req.body.newValue; // Значение, которое вы хотите установить
-
+      console.log('Received new value:', newValue);
       try {
         const updateResponse = await sheets.spreadsheets.values.update({
           auth,
