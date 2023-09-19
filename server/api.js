@@ -196,7 +196,7 @@ app.post('/google-sheets/update-value1', async (req, res) => {
         const updateResponse = await sheets.spreadsheets.values.update({
           auth,
           spreadsheetId,
-          range: `${sheetName}!B15`, 
+          range: `${sheetName}!B15:B15`, 
           valueInputOption: 'RAW', // Опция для установки значения
           resource: {
             values: [[newValue]],
@@ -232,7 +232,7 @@ app.post('/google-sheets/update-value2', async (req, res) => {
         const updateResponse = await sheets.spreadsheets.values.update({
           auth,
           spreadsheetId,
-          range: `${sheetName}!C15`, 
+          range: `${sheetName}!C15:C15`, 
           valueInputOption: 'RAW', // Опция для установки значения
           resource: {
             values: [[newValue]],
@@ -268,7 +268,7 @@ app.post('/google-sheets/update-value3', async (req, res) => {
         const updateResponse = await sheets.spreadsheets.values.update({
           auth,
           spreadsheetId,
-          range: `${sheetName}!D15`, 
+          range: `${sheetName}!D15:D15`, 
           valueInputOption: 'RAW', // Опция для установки значения
           resource: {
             values: [[newValue]],
@@ -304,7 +304,7 @@ app.post('/google-sheets/update-value4', async (req, res) => {
         const updateResponse = await sheets.spreadsheets.values.update({
           auth,
           spreadsheetId,
-          range: `${sheetName}!B17`, 
+          range: `${sheetName}!B17:B17`, 
           valueInputOption: 'RAW', // Опция для установки значения
           resource: {
             values: [[newValue]],
@@ -340,7 +340,7 @@ app.post('/google-sheets/update-value5', async (req, res) => {
         const updateResponse = await sheets.spreadsheets.values.update({
           auth,
           spreadsheetId,
-          range: `${sheetName}!B21`, 
+          range: `${sheetName}!B21:B21`, 
           valueInputOption: 'RAW', // Опция для установки значения
           resource: {
             values: [[newValue]],
@@ -376,7 +376,7 @@ app.post('/google-sheets/update-value6', async (req, res) => {
         const updateResponse = await sheets.spreadsheets.values.update({
           auth,
           spreadsheetId,
-          range: `${sheetName}!C21`, 
+          range: `${sheetName}!C21:C21`, 
           valueInputOption: 'RAW', // Опция для установки значения
           resource: {
             values: [[newValue]],
@@ -412,7 +412,7 @@ app.post('/google-sheets/update-value7', async (req, res) => {
         const updateResponse = await sheets.spreadsheets.values.update({
           auth,
           spreadsheetId,
-          range: `${sheetName}!B23`, 
+          range: `${sheetName}!B23:B23`, 
           valueInputOption: 'RAW', // Опция для установки значения
           resource: {
             values: [[newValue]],
@@ -448,7 +448,7 @@ app.post('/google-sheets/update-value8', async (req, res) => {
         const updateResponse = await sheets.spreadsheets.values.update({
           auth,
           spreadsheetId,
-          range: `${sheetName}!B25`, 
+          range: `${sheetName}!B25:B25`, 
           valueInputOption: 'RAW', // Опция для установки значения
           resource: {
             values: [[newValue]],
@@ -484,7 +484,7 @@ app.post('/google-sheets/update-value9', async (req, res) => {
         const updateResponse = await sheets.spreadsheets.values.update({
           auth,
           spreadsheetId,
-          range: `${sheetName}!B27`, 
+          range: `${sheetName}!B27:B27`, 
           valueInputOption: 'RAW', // Опция для установки значения
           resource: {
             values: [[newValue]],
@@ -520,7 +520,7 @@ app.post('/google-sheets/update-value9', async (req, res) => {
         const updateResponse = await sheets.spreadsheets.values.update({
           auth,
           spreadsheetId,
-          range: `${sheetName}!B31`, 
+          range: `${sheetName}!B31:B31`, 
           valueInputOption: 'RAW', // Опция для установки значения
           resource: {
             values: [[newValue]],
@@ -556,7 +556,7 @@ app.post('/google-sheets/update-value10', async (req, res) => {
         const updateResponse = await sheets.spreadsheets.values.update({
           auth,
           spreadsheetId,
-          range: `${sheetName}!B33`, 
+          range: `${sheetName}!B33:B33`, 
           valueInputOption: 'RAW', // Опция для установки значения
           resource: {
             values: [[newValue]],
