@@ -628,7 +628,7 @@ async function createPdfFromGoogleSheets(auth) {
 
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([400, 400]);
-    const fontBytes = await fs.readFile('../../../projects/Roboto/Roboto-Regular.ttf');
+    const fontBytes = await fs.readFile('../Roboto/Roboto-Regular.ttf');
     const customFont = await pdfDoc.embedFont(fontBytes);
 
     const content = page.drawText(`Data from Google Sheets:\n${values.join('\n')}`, {
