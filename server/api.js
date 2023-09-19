@@ -6,6 +6,7 @@ import { google } from 'googleapis';
 import fs from 'fs/promises';
 import process from 'process';
 import { GoogleSpreadsheet } from 'google-spreadsheet';
+import { PDFDocument } from 'pdf-lib';
 
 const app = express();
 const port = process.env.PORT || 3000;
