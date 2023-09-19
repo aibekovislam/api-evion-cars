@@ -5,6 +5,7 @@ import cors from 'cors';
 import { google } from 'googleapis';
 import fs from 'fs/promises';
 import process from 'process';
+import { GoogleSpreadsheet } from 'google-spreadsheet';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -91,6 +92,526 @@ app.get('/google-sheets', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
+app.get('/google-sheets/calculator', async (req, res) => {
+  try {
+    auth.authorize(async (err) => {
+      if (err) {
+        console.error('Authentication error:', err);
+        return res.status(500).json({ error: 'Authentication error' });
+      }
+    
+      const spreadsheetId = '1A_L5vz3P0nhA4iDOrK9Pi89jdl15vLihaZw70GoTaVY';
+    
+      const sheetName = 'Калькулятор TOUCH';
+    
+      try {
+        const response = await sheets.spreadsheets.values.get({
+          auth,
+          spreadsheetId,
+          range: `${sheetName}!B12`, 
+        });
+    
+        const data = response.data.values;
+        if (data.length === 0) {
+          console.log('No data found.');
+          res.json({ message: 'No data found' }); 
+        } else {
+          console.log('Fetched data:', data);
+          res.json({ data }); 
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        res.status(500).json({ error: 'Error fetching data' });
+      }
+    });
+  } catch (error) {
+    console.log(error)
+  }
+});
+
+app.post('/google-sheets/update-dropdown-value', async (req, res) => {
+  try {
+    auth.authorize(async (err) => {
+      if (err) {
+        console.error('Authentication error:', err);
+        return res.status(500).json({ error: 'Authentication error' });
+      }
+
+      const spreadsheetId = '1A_L5vz3P0nhA4iDOrK9Pi89jdl15vLihaZw70GoTaVY';
+      const sheetName = 'Калькулятор TOUCH';
+      const cellValue = req.body.newValue; // Получите новое значение из тела запроса
+
+      try {
+        // Получите диапазон, связанный с раскрывающимся списком
+        const response = await sheets.spreadsheets.values.get({
+          auth,
+          spreadsheetId,
+          range: `${sheetName}!B12:B12`, // Укажите соответствующий диапазон
+        });
+
+        const data = response.data.values;
+        if (data.length === 0) {
+          console.error('No data found.');
+          return res.json({ message: 'No data found' });
+        }
+
+        // Обновите значение в этом диапазоне
+        const newDropdownValue = [[cellValue]];
+        await sheets.spreadsheets.values.update({
+          auth,
+          spreadsheetId,
+          range: `${sheetName}!B12:B12`,
+          valueInputOption: 'RAW',
+          resource: { values: newDropdownValue },
+        });
+
+        // Теперь значение в ячейке B12 должно быть обновлено
+        console.log('Dropdown list value updated successfully.');
+        res.json({ message: 'Dropdown list value updated successfully' });
+      } catch (error) {
+        console.error('Error updating dropdown list value:', error);
+        res.status(500).json({ error: 'Error updating dropdown list value' });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+app.post('/google-sheets/update-value1', async (req, res) => {
+  try {
+    auth.authorize(async (err) => {
+      if (err) {
+        console.error('Authentication error:', err);
+        return res.status(500).json({ error: 'Authentication error' });
+      }
+
+      const spreadsheetId = '1A_L5vz3P0nhA4iDOrK9Pi89jdl15vLihaZw70GoTaVY';
+      const sheetName = 'Калькулятор TOUCH';
+      const newValue = req.body.newValue; // Значение, которое вы хотите установить
+
+      try {
+        const updateResponse = await sheets.spreadsheets.values.update({
+          auth,
+          spreadsheetId,
+          range: `${sheetName}!B15`, 
+          valueInputOption: 'RAW', // Опция для установки значения
+          resource: {
+            values: [[newValue]],
+          },
+        });
+
+        console.log('Cell updated:', updateResponse.data);
+        res.json({ message: 'Cell updated successfully' });
+      } catch (error) {
+        console.error('Error updating cell:', error);
+        res.status(500).json({ error: 'Error updating cell' });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+}); //B15
+
+app.post('/google-sheets/update-value2', async (req, res) => {
+  try {
+    auth.authorize(async (err) => {
+      if (err) {
+        console.error('Authentication error:', err);
+        return res.status(500).json({ error: 'Authentication error' });
+      }
+
+      const spreadsheetId = '1A_L5vz3P0nhA4iDOrK9Pi89jdl15vLihaZw70GoTaVY';
+      const sheetName = 'Калькулятор TOUCH';
+      const newValue = req.body.newValue; // Значение, которое вы хотите установить
+
+      try {
+        const updateResponse = await sheets.spreadsheets.values.update({
+          auth,
+          spreadsheetId,
+          range: `${sheetName}!C15`, 
+          valueInputOption: 'RAW', // Опция для установки значения
+          resource: {
+            values: [[newValue]],
+          },
+        });
+
+        console.log('Cell updated:', updateResponse.data);
+        res.json({ message: 'Cell updated successfully' });
+      } catch (error) {
+        console.error('Error updating cell:', error);
+        res.status(500).json({ error: 'Error updating cell' });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+}); //C15
+
+app.post('/google-sheets/update-value3', async (req, res) => {
+  try {
+    auth.authorize(async (err) => {
+      if (err) {
+        console.error('Authentication error:', err);
+        return res.status(500).json({ error: 'Authentication error' });
+      }
+
+      const spreadsheetId = '1A_L5vz3P0nhA4iDOrK9Pi89jdl15vLihaZw70GoTaVY';
+      const sheetName = 'Калькулятор TOUCH';
+      const newValue = req.body.newValue; // Значение, которое вы хотите установить
+
+      try {
+        const updateResponse = await sheets.spreadsheets.values.update({
+          auth,
+          spreadsheetId,
+          range: `${sheetName}!D15`, 
+          valueInputOption: 'RAW', // Опция для установки значения
+          resource: {
+            values: [[newValue]],
+          },
+        });
+
+        console.log('Cell updated:', updateResponse.data);
+        res.json({ message: 'Cell updated successfully' });
+      } catch (error) {
+        console.error('Error updating cell:', error);
+        res.status(500).json({ error: 'Error updating cell' });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+}); //D15
+
+app.post('/google-sheets/update-value4', async (req, res) => {
+  try {
+    auth.authorize(async (err) => {
+      if (err) {
+        console.error('Authentication error:', err);
+        return res.status(500).json({ error: 'Authentication error' });
+      }
+
+      const spreadsheetId = '1A_L5vz3P0nhA4iDOrK9Pi89jdl15vLihaZw70GoTaVY';
+      const sheetName = 'Калькулятор TOUCH';
+      const newValue = req.body.newValue; // Значение, которое вы хотите установить
+
+      try {
+        const updateResponse = await sheets.spreadsheets.values.update({
+          auth,
+          spreadsheetId,
+          range: `${sheetName}!B17`, 
+          valueInputOption: 'RAW', // Опция для установки значения
+          resource: {
+            values: [[newValue]],
+          },
+        });
+
+        console.log('Cell updated:', updateResponse.data);
+        res.json({ message: 'Cell updated successfully' });
+      } catch (error) {
+        console.error('Error updating cell:', error);
+        res.status(500).json({ error: 'Error updating cell' });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+}); //B17
+
+app.post('/google-sheets/update-value5', async (req, res) => {
+  try {
+    auth.authorize(async (err) => {
+      if (err) {
+        console.error('Authentication error:', err);
+        return res.status(500).json({ error: 'Authentication error' });
+      }
+
+      const spreadsheetId = '1A_L5vz3P0nhA4iDOrK9Pi89jdl15vLihaZw70GoTaVY';
+      const sheetName = 'Калькулятор TOUCH';
+      const newValue = req.body.newValue; // Значение, которое вы хотите установить
+
+      try {
+        const updateResponse = await sheets.spreadsheets.values.update({
+          auth,
+          spreadsheetId,
+          range: `${sheetName}!B21`, 
+          valueInputOption: 'RAW', // Опция для установки значения
+          resource: {
+            values: [[newValue]],
+          },
+        });
+
+        console.log('Cell updated:', updateResponse.data);
+        res.json({ message: 'Cell updated successfully' });
+      } catch (error) {
+        console.error('Error updating cell:', error);
+        res.status(500).json({ error: 'Error updating cell' });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+}); // B21
+
+app.post('/google-sheets/update-value6', async (req, res) => {
+  try {
+    auth.authorize(async (err) => {
+      if (err) {
+        console.error('Authentication error:', err);
+        return res.status(500).json({ error: 'Authentication error' });
+      }
+
+      const spreadsheetId = '1A_L5vz3P0nhA4iDOrK9Pi89jdl15vLihaZw70GoTaVY';
+      const sheetName = 'Калькулятор TOUCH';
+      const newValue = req.body.newValue; // Значение, которое вы хотите установить
+
+      try {
+        const updateResponse = await sheets.spreadsheets.values.update({
+          auth,
+          spreadsheetId,
+          range: `${sheetName}!C21`, 
+          valueInputOption: 'RAW', // Опция для установки значения
+          resource: {
+            values: [[newValue]],
+          },
+        });
+
+        console.log('Cell updated:', updateResponse.data);
+        res.json({ message: 'Cell updated successfully' });
+      } catch (error) {
+        console.error('Error updating cell:', error);
+        res.status(500).json({ error: 'Error updating cell' });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+}); // C21
+
+app.post('/google-sheets/update-value7', async (req, res) => {
+  try {
+    auth.authorize(async (err) => {
+      if (err) {
+        console.error('Authentication error:', err);
+        return res.status(500).json({ error: 'Authentication error' });
+      }
+
+      const spreadsheetId = '1A_L5vz3P0nhA4iDOrK9Pi89jdl15vLihaZw70GoTaVY';
+      const sheetName = 'Калькулятор TOUCH';
+      const newValue = req.body.newValue; // Значение, которое вы хотите установить
+
+      try {
+        const updateResponse = await sheets.spreadsheets.values.update({
+          auth,
+          spreadsheetId,
+          range: `${sheetName}!B23`, 
+          valueInputOption: 'RAW', // Опция для установки значения
+          resource: {
+            values: [[newValue]],
+          },
+        });
+
+        console.log('Cell updated:', updateResponse.data);
+        res.json({ message: 'Cell updated successfully' });
+      } catch (error) {
+        console.error('Error updating cell:', error);
+        res.status(500).json({ error: 'Error updating cell' });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+}); // B23
+
+app.post('/google-sheets/update-value8', async (req, res) => {
+  try {
+    auth.authorize(async (err) => {
+      if (err) {
+        console.error('Authentication error:', err);
+        return res.status(500).json({ error: 'Authentication error' });
+      }
+
+      const spreadsheetId = '1A_L5vz3P0nhA4iDOrK9Pi89jdl15vLihaZw70GoTaVY';
+      const sheetName = 'Калькулятор TOUCH';
+      const newValue = req.body.newValue; // Значение, которое вы хотите установить
+
+      try {
+        const updateResponse = await sheets.spreadsheets.values.update({
+          auth,
+          spreadsheetId,
+          range: `${sheetName}!B25`, 
+          valueInputOption: 'RAW', // Опция для установки значения
+          resource: {
+            values: [[newValue]],
+          },
+        });
+
+        console.log('Cell updated:', updateResponse.data);
+        res.json({ message: 'Cell updated successfully' });
+      } catch (error) {
+        console.error('Error updating cell:', error);
+        res.status(500).json({ error: 'Error updating cell' });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+}); // B25
+
+app.post('/google-sheets/update-value9', async (req, res) => {
+  try {
+    auth.authorize(async (err) => {
+      if (err) {
+        console.error('Authentication error:', err);
+        return res.status(500).json({ error: 'Authentication error' });
+      }
+
+      const spreadsheetId = '1A_L5vz3P0nhA4iDOrK9Pi89jdl15vLihaZw70GoTaVY';
+      const sheetName = 'Калькулятор TOUCH';
+      const newValue = req.body.newValue; // Значение, которое вы хотите установить
+
+      try {
+        const updateResponse = await sheets.spreadsheets.values.update({
+          auth,
+          spreadsheetId,
+          range: `${sheetName}!B27`, 
+          valueInputOption: 'RAW', // Опция для установки значения
+          resource: {
+            values: [[newValue]],
+          },
+        });
+
+        console.log('Cell updated:', updateResponse.data);
+        res.json({ message: 'Cell updated successfully' });
+      } catch (error) {
+        console.error('Error updating cell:', error);
+        res.status(500).json({ error: 'Error updating cell' });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+}); // B27
+
+app.post('/google-sheets/update-value9', async (req, res) => {
+  try {
+    auth.authorize(async (err) => {
+      if (err) {
+        console.error('Authentication error:', err);
+        return res.status(500).json({ error: 'Authentication error' });
+      }
+
+      const spreadsheetId = '1A_L5vz3P0nhA4iDOrK9Pi89jdl15vLihaZw70GoTaVY';
+      const sheetName = 'Калькулятор TOUCH';
+      const newValue = req.body.newValue; // Значение, которое вы хотите установить
+
+      try {
+        const updateResponse = await sheets.spreadsheets.values.update({
+          auth,
+          spreadsheetId,
+          range: `${sheetName}!B31`, 
+          valueInputOption: 'RAW', // Опция для установки значения
+          resource: {
+            values: [[newValue]],
+          },
+        });
+
+        console.log('Cell updated:', updateResponse.data);
+        res.json({ message: 'Cell updated successfully' });
+      } catch (error) {
+        console.error('Error updating cell:', error);
+        res.status(500).json({ error: 'Error updating cell' });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+}); // B31
+
+app.post('/google-sheets/update-value10', async (req, res) => {
+  try {
+    auth.authorize(async (err) => {
+      if (err) {
+        console.error('Authentication error:', err);
+        return res.status(500).json({ error: 'Authentication error' });
+      }
+
+      const spreadsheetId = '1A_L5vz3P0nhA4iDOrK9Pi89jdl15vLihaZw70GoTaVY';
+      const sheetName = 'Калькулятор TOUCH';
+      const newValue = req.body.newValue; // Значение, которое вы хотите установить
+
+      try {
+        const updateResponse = await sheets.spreadsheets.values.update({
+          auth,
+          spreadsheetId,
+          range: `${sheetName}!B33`, 
+          valueInputOption: 'RAW', // Опция для установки значения
+          resource: {
+            values: [[newValue]],
+          },
+        });
+
+        console.log('Cell updated:', updateResponse.data);
+        res.json({ message: 'Cell updated successfully' });
+      } catch (error) {
+        console.error('Error updating cell:', error);
+        res.status(500).json({ error: 'Error updating cell' });
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+}); // B33
+
+app.get('google-sheets/result', async (req, res) => {
+  try {
+    auth.authorize(async (err) => {
+      if (err) {
+        console.error('Authentication error:', err);
+        return res.status(500).json({ error: 'Authentication error' });
+      }
+    
+      const spreadsheetId = '1A_L5vz3P0nhA4iDOrK9Pi89jdl15vLihaZw70GoTaVY';
+    
+      const sheetName = 'Калькулятор TOUCH';
+    
+      try {
+        const response = await sheets.spreadsheets.values.get({
+          auth,
+          spreadsheetId,
+          range: `${sheetName}!B62:H62`, 
+        });
+    
+        const data = response.data.values;
+        if (data.length === 0) {
+          console.log('No data found.');
+          res.json({ message: 'No data found' }); 
+        } else {
+          console.log('Fetched data:', data);
+          res.json({ data }); 
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        res.status(500).json({ error: 'Error fetching data' });
+      }
+    });
+  } catch (error) {
+    console.log(error)
+  }
+}) // result
 
 app.get('/getProducts', async (req, res) => {
   try {
