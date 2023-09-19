@@ -613,6 +613,49 @@ app.get('/google-sheets/result', async (req, res) => {
   }
 }) // result
 
+async function createPdfFromGoogleSheets(auth) {
+  try {
+    const sheetsResponse = await sheets.spreadsheets.values.get({
+      auth,
+      spreadsheetId: '1A_L5vz3P0nhA4iDOrK9Pi89jdl15vLihaZw70GoTaVY',
+      range: 'A62:K102', // Замените на нужный диапазон данных
+    });
+
+    const values = sheetsResponse.data.values;
+    if (!values || values.length === 0) {
+      throw new Error('No data found.');
+    }
+
+    const pdfDoc = await PDFDocument.create();
+    const page = pdfDoc.addPage([400, 400]);
+    const content = page.drawText(`Data from Google Sheets:\n${values.join('\n')}`, {
+      x: 50,
+      y: 350,
+      size: 12,
+      color: rgb(0, 0, 0),
+    });
+
+    const pdfBytes = await pdfDoc.save();
+    return pdfBytes;
+  } catch (error) {
+    console.error('Error creating PDF:', error);
+    throw error;
+  }
+}
+
+app.get('/download-pdf', async (req, res) => {
+  try {
+    const pdfBytes = await createPdfFromGoogleSheets(auth);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=google_sheets_data.pdf');
+    res.send(pdfBytes);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error generating PDF' });
+  }
+});
+
+
 app.get('/getProducts', async (req, res) => {
   try {
     const response = await axios.get(
