@@ -614,8 +614,6 @@ app.get('/google-sheets/result', async (req, res) => {
   }
 }) // result
 
-const { PDFDocument, rgb } = require('pdf-lib');
-
 async function createPdfFromGoogleSheets(auth) {
   try {
     const sheetsResponse = await sheets.spreadsheets.values.get({
