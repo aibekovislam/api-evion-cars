@@ -5,8 +5,7 @@ import cors from 'cors';
 import { google } from 'googleapis';
 import fs from 'fs/promises';
 import process from 'process';
-import { GoogleSpreadsheet } from 'google-spreadsheet';
-import { PDFDocument, rgb } from 'pdf-lib';
+import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -629,11 +628,15 @@ async function createPdfFromGoogleSheets(auth) {
 
     const pdfDoc = await PDFDocument.create();
     const page = pdfDoc.addPage([400, 400]);
+    const fontBytes = await fs.readFile('../../../projects/Roboto/Roboto-Regular.ttf');
+    const customFont = await pdfDoc.embedFont(fontBytes);
+
     const content = page.drawText(`Data from Google Sheets:\n${values.join('\n')}`, {
       x: 50,
       y: 350,
       size: 12,
       color: rgb(0, 0, 0),
+      font: customFont, // Используйте кастомный шрифт
     });
 
     const pdfBytes = await pdfDoc.save();
