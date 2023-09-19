@@ -576,7 +576,7 @@ app.post('/google-sheets/update-value10', async (req, res) => {
   }
 }); // B33
 
-app.get('google-sheets/result', async (req, res) => {
+app.get('/google-sheets/result', async (req, res) => {
   try {
     auth.authorize(async (err) => {
       if (err) {
