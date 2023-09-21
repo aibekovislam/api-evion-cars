@@ -715,7 +715,7 @@ app.get('/getImages/:id', async (req, res) => {
   }
 })
 
-app.get('/car/images', async (req, res) => {
+app.get('/car/images/:id', async (req, res) => {
   try {
     const response = await axios.get(`https://online.moysklad.ru/api/remap/1.2/entity/product/${req.params.id}/images`, {
       headers: {
