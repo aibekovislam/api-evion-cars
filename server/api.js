@@ -737,7 +737,7 @@ app.get('/car/images', async (req, res) => {
 
 app.get('/car/:id', async (req, res) => {
   try {
-    const response = await axios.get(`https://online.moysklad.ru/api/remap/1.2/entity/product/${req.params.id}`, {
+    const response = await axios.get(`https://online.moysklad.ru/api/remap/1.2/entity/product/${req.params.id}/images`, {
       headers: {
         Authorization: 'Bearer 224525b73a9c5cf1f31973127b90897be84d1916',
       }
